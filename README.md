@@ -10,7 +10,7 @@
 
 ## ⚙️ Setup
 
-Dans ce labo, nous allons ajouter des fonctionnalités de paiement à notre application `store_manager`. Ainsi comme nous avons les répertoires `orders` et `stocks` dans notre projet, nous pourrions simplement ajouter un répertoire `payments` et commencer à écrire nos fonctionnalités de paiement. Cependant, il vaut mieux développer une application complètement isolée dans un dépôt séparé - un microservice - pour les paiements en lieu de l'ajouter au `store_manager`. Ça nous donne plus de flexibilité de déploiement et évolution. Pour en savoir plus, veuillez lire la documentation architecturale dans le répertoire `/docs/arc42/architecture.pdf`.
+Dans ce labo, nous allons ajouter des fonctionnalités de paiement à notre application Store Manager. Ainsi comme nous avons les répertoires `orders` et `stocks` dans notre projet, nous pourrions simplement ajouter un répertoire `payments` et commencer à écrire nos fonctionnalités de paiement. Cependant, il vaut mieux développer une application complètement isolée dans un dépôt séparé - un microservice - pour les paiements au lieu de l'ajouter au Store Manager. Ça nous donne plus de flexibilité de déploiement et d'évolution. Pour en savoir plus, veuillez lire la documentation architecturale dans le répertoire `/docs/arc42/architecture.pdf`.
 
 > ⚠️ ATTENTION : Pendant ce laboratoire, nous allons travailler avec ce dépôt (`log430-labo5`), ainsi qu'avec un **deuxième dépôt**, [log430-labo5-paiement](https://github.com/guteacher/log430-labo5-payment). Veuillez lire le document `/docs/adr/adr001.md` dans `log430-labo5-paiement` pour comprendre notre choix de créer un microservice séparé pour les fonctionnalités de paiement.
 
@@ -49,7 +49,7 @@ Utilisez les mêmes approches qui ont été abordées lors des derniers laborato
 ### 1. Intégration du service de paiement
 Dans `orders/commands/write_order.py`, la fonction `add_order` effectue la création des nouvelles commandes. Dans cette version de l'application, elle va également accomplir une étape supplémentaire : demander à un service de paiement la création d'une transaction de paiement, que nous garderons sous forme de lien avec la commande pour que, plus tard, on puisse payer pour la commande.
 
-**Votre tâche :** dans `orders/commands/write_order.py`, complétez l'implémentation de la fonction `request_payment_link` pour faire un appel POST au endpoint `/payments` dans le service de paiement et obtenir le `payment_id`.
+**Votre tâche :** dans `orders/commands/write_order.py`, complétez l'implémentation de la fonction `request_payment_link` pour faire un appel POST à l'endpoint `/payments` dans le service de paiement et obtenir le `payment_id`.
 
 ```python
   response_from_payment_service = requests.post('url-to-api-gateway',
@@ -60,19 +60,19 @@ Dans `orders/commands/write_order.py`, la fonction `add_order` effectue la créa
 
 > ⚠️ ATTENTION : Pour connaître l'URL du service de paiement, veuillez regarder dans `config/krakend.json`. Nous n'allons pas appeler le service directement, nous appellerons KrakenD et il s'occupera d'acheminer notre requête vers le bon chemin. Même si les endpoints du service de paiement ou les hostnames changent, si nous maintenons KrakenD à jour, aucune modification n'est nécessaire dans l'application Store Manager.
 
-> 💡 **Question 1** : Quelle réponse obtenons-nous à la requête à `POST /payments` ? Illustrez votre réponse avec des captures d'écran/terminal.
+> 💡 **Question 1** : Quelle réponse obtenons-nous à la requête à `POST /payments` ? Illustrez votre réponse avec des captures d'écran/du terminal.
 
 ### 2. Utilisez le lien de paiement
 - Dans votre Postman, importez la collection Postman qui est dans `docs/collections` à `log430-labo5`
 - Ensuite, importez aussi la collection sur `docs/collections` à `log430-labo5-payment`
 
 #### Dans `log430-labo5`
-- Créez une commande avec `POST /orders`. Vous obtiendra un `order_id`.
-- Cherchez la commande avec `GET /order/:id`. Vous obtiendra un `payment_id`.
+- Créez une commande avec `POST /orders`. Vous obtiendrez un `order_id`.
+- Cherchez la commande avec `GET /order/:id`. Vous obtiendrez un `payment_id`.
 
 #### Dans `log430-labo5-payment`
 - Faites une requête à `POST payments/process/:id` en utilisant le `payment_id` obtenu. Regardez l'onglet "Body" pour voir ce qu'on est en train d'envoyer dans la requête.
-- Faites une requête à `GET payments/:id` en utilisant le `payment_id` obtenu. Observez le résultat pour savoir se le paiement a éte realisé correctement.
+- Faites une requête à `GET payments/:id` en utilisant le `payment_id` obtenu. Observez le résultat pour savoir si le paiement a été réalisé correctement.
 
 > 💡 **Question 2** : Quel type d'information envoyons-nous dans la requête à `POST payments/process/:id` ? Est-ce que ce serait le même format si on communiquait avec un service SOA, par exemple ? Illustrez votre réponse avec des exemples et captures d'écran/terminal.
 
@@ -112,11 +112,11 @@ Ajoutez l'endpoint de création de commandes à `config/krakend.json`. Nous l'ut
 Ensuite, **reconstruisez et redémarrez** le conteneur Docker. 
 
 ### 4. Mettez à jour la commande après le paiement
-Si les étapes de l'activité 2 fonctionnent, cela signifie que les paiements sont traités correctement. Cependant, si ces informations restent dans le service de paiement, elles ne sont pas très utiles. Modifiez `log430-labo05-payment` pour faire en sorte qu'il appelle le endpoint `PUT /orders` dans `log430-labo05` pour mettre à jour la commande de (modifier `is_paid` à `true`). Utilisez les documents architecturaux disponibles dans `log430-labo05-payment` pour comprendre le fonctionnement du service et déterminer quel module ou quelle méthode doit être modifié(e).
+Si les étapes de l'activité 2 fonctionnent, cela signifie que les paiements sont traités correctement. Cependant, si ces informations restent dans le service de paiement, elles ne sont pas très utiles. Modifiez `log430-labo05-payment` pour faire en sorte qu'il appelle l'endpoint `PUT /orders` dans `log430-labo05` pour mettre à jour la commande de (modifier `is_paid` à `true`). Utilisez les documents architecturaux disponibles dans `log430-labo05-payment` pour comprendre le fonctionnement du service et déterminer quel module ou quelle méthode doit être modifié(e).
 
-> ⚠️ ATTENTION : N'oubliez d'appeler l'endpoint tel que décrit dans `config/krakend.json`.
+> ⚠️ ATTENTION : N'oubliez pas d'appeler l'endpoint tel que décrit dans `config/krakend.json`.
 
-> 💡 **Question 4** : Quelle méthode avez-vous dû modifier dans `log430-labo05-payment` et qu'avez-vous modifié ? Justifiez avec un extrait de code.
+> 💡 **Question 4** : Quelle méthode avez-vous dû modifier dans `log430-labo05-payment` et qu'avez-vous modifiée ? Justifiez avec un extrait de code.
 
 ### 5. Testez le rate limiting avec Locust
 En plus de fonctionner en tant qu'une façade pour nos APIs, nous pouvons aussi utiliser KrakenD pour limiter l'accès à nos APIs et les protéger des attaques DDOS, par exemple. Nous faisons ça avec rate limiting. Créez un nouveau test dans `locustfiles/locustfile.py` spécifiquement pour tester le rate limiting :
@@ -155,7 +155,7 @@ command: -f /mnt/locust/locustfile.py --host=http://api-gateway:8080
 **Reconstruisez et redémarrez** le conteneur Docker. Ensuite, dans votre navigateur, accédez à `http://localhost:8089` et configurez Locust avec :
 - Number of users : 100 (total)
 - Spawn rate : 1 (par seconde)
-- Host: `http://api-gateway:8080` (l'adresse à KrakenD)
+- Host : `http://api-gateway:8080` (l'adresse à KrakenD)
 
 Lancez le test et observez les réponses HTTP 503 (Service Unavailable).
 
@@ -196,7 +196,11 @@ Testez différents délais en utilisant votre navigateur :
 > 💡 **Question 5** : Que se passe-t-il dans le navigateur quand vous faites une requête avec un délai supérieur au timeout configuré (5 secondes) ? Quelle est l'importance du timeout dans une architecture de microservices ? Justifiez votre réponse avec des exemples pratiques.
 
 ### 7. Éxécutez un test de charge
-Éxécutez un test de charge sur l'application Store Manager en utilisant Locust. Suivez les mêmes instructions que celles du laboratoire 4, activité 5. Testez la création d'une commande et notez vos observations sur les performances dans le rapport.
+Exécutez un test de charge sur l'application Store Manager en utilisant Locust. 
+- Si possible, déployez Store Manager et le service de paiement dans deux VMs distinctes.
+- Le cas échéant, modifiez le `host` cible sur Locust pour qu'il corresponde à l'adresse IP de la VM qui héberge l'application Store Manager.
+- Suivez les mêmes instructions que celles du laboratoire 4, activité 5. 
+- Testez la création d'une commande et notez vos observations sur les performances dans le rapport.
 
 ## 📦 Livrables
 
