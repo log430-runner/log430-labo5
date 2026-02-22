@@ -2,7 +2,7 @@
 <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Ets_quebec_logo.png" width="250">    
 ÉTS - LOG430 - Architecture logicielle - Chargé de laboratoire : Gabriel C. Ullmann, Hiver 2026.
 
-Dans ce tutoriel, vous allez utiliser [Kubernetes](https://github.com/kubernetes/kubernetes), un orchestrateur de conteneurs, pour créer une grappe avec 2 serveurs et déployer l'application de votre environnement de développement à votre environnement de production de manière semi-automatique, en pouvant répliquer votre application et ajouter plusieurs nœuds à la grappe de manière simple.
+Dans ce tutoriel, vous allez utiliser [k3s](https://k3s.io/), une version simplifiée de [Kubernetes](https://github.com/kubernetes/kubernetes) (k8s), pour créer une grappe avec 2 serveurs et déployer l'application de votre environnement de développement à votre environnement de production de manière semi-automatique, en pouvant répliquer votre application et ajouter plusieurs nœuds à la grappe de manière simple.
 
 ## 🎯 Objectifs d'apprentissage
 - Apprendre à utiliser [k3s](https://k3s.io/), une version simplifiée de Kubernetes
@@ -183,3 +183,5 @@ Modifiez l'attribut `replicas` dans `k8s-manifests.yml`. Ici, nous utilisons la 
 ```bash
 kubectl scale deployment store-manager --replicas=3
 ```
+
+La facilité d'ajout de nouveaux nœuds et de nouvelles répliques est l'un des principaux avantages de l'utilisation de k3s ou k8s. [Docker Swarm](https://docs.docker.com/engine/swarm/) offre des fonctionnalités similaires.

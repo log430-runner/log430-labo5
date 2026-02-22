@@ -202,6 +202,11 @@ Exécutez un test de charge sur l'application Store Manager en utilisant Locust.
 - Suivez les mêmes instructions que celles du laboratoire 4, activité 5. 
 - Testez la création d'une commande et notez vos observations sur les performances dans le rapport.
 
+### 8. Déploiement avec Kubernetes (facultatif)
+L'adoption d'une architecture en microsservices soulève un défi important : le déploiement se complexifie, surtout lorsque chaque service est hébergé sur un serveur distinct. Bien qu'il soit possible d'automatiser les tests et le déploiement via GitHub CI, la configuration doit être répétée pour chaque nouvelle VM ou serveur, et il faut s'assurer que tous exécutent la dernière version du code.
+
+Pour simplifier et mieux mettre à l'échelle ce processus, il est recommandé d'utiliser un orchestrateur de conteneurs tel que [Kubernetes](https://github.com/kubernetes/kubernetes) (k8s). Consultez le tutoriel dans le fichier `ks3.md` pour en savoir plus. Bien que vos compétences en Kubernetes ne soient pas évaluées dans ce laboratoire, elles peuvent s'avérer précieuses lors du déploiement de votre projet.
+
 ## 📦 Livrables
 
 - Un fichier .zip contenant l'intégralité du code source du projet Labo 05.
