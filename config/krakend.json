@@ -12,7 +12,8 @@
       "backend": [
         {
           "url_pattern": "/payments",
-          "host": ["http://payments_api:5009"],
+          "_change_for_deployment": "host is http://payments_api:5009 // http://10.194.32.180:5009",
+          "host": ["http://10.194.32.180:5009"], 
           "timeout": "5s"
         }
       ]
@@ -23,7 +24,8 @@
       "backend": [
         {
           "url_pattern": "/payments/process/{payment_id}",
-          "host": ["http://payments_api:5009"],
+          "_change_for_deployment": "host is http://payments_api:5009 // http://10.194.32.180:5009",
+          "host": ["http://10.194.32.180:5009"],
           "timeout": "5s"
         }
       ]
