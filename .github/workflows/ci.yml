@@ -2,13 +2,16 @@ name: CI/CD
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [main, master]
   pull_request:
 
 jobs:
   test:
     runs-on: self-hosted
     steps:
+      - name: Reprendre possession du workspace
+        run: docker run --rm -v "${{ github.workspace }}":/ws alpine chown -R "$(id -u)":"$(id -g)" /ws || true
+
       - name: Checkout du code
         uses: actions/checkout@v4
 
